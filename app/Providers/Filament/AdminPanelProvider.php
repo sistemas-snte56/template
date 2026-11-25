@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Support\Enums\Width;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,9 +29,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->darkMode(false)
             ->colors([
+                // 'primary' => Color::hex('#e4600b'), // Tu color naranja institucional
                 'primary' => Color::Amber,
             ])
+            ->font('Poppins') // Fuente Poppins aplicada de forma nativa por Filament
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -54,6 +58,23 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            
+            ->maxContentWidth(Width::Full) // Contenedor al ancho completo
+            ->topNavigation() //Navegación arriba (topbar)
+            // ->footer('Copyright © ' . date('Y') . ' - Mi Empresa') // Pie de página personalizado
+            ->favicon(asset('favicon.ico')) // Favicon personalizado
+            ->brandName('SNTE | Sección 56') // Nombre de la marca
+            ->brandLogo(asset('images/logosnte56@4x-8.png')) // Logo personalizado
+            ->brandLogoHeight('6rem') // Altura del logo
+            ->renderHook('panels::head.end', fn () => '
+                    <style>
+                        .fi-logo {
+                            padding: 0.75rem 0;
+                        }
+                    </style>
+                ')
+            ->profile()            
+            ;
     }
 }
